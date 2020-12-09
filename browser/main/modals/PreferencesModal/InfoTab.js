@@ -3,7 +3,6 @@ import CSSModules from 'browser/lib/CSSModules'
 import styles from './InfoTab.styl'
 import ConfigManager from 'browser/main/lib/ConfigManager'
 import { store } from 'browser/main/store'
-import AwsMobileAnalyticsConfig from 'browser/main/lib/AwsMobileAnalyticsConfig'
 import _ from 'lodash'
 import i18n from 'browser/lib/i18n'
 
@@ -82,7 +81,6 @@ class InfoTab extends React.Component {
     }
 
     if (!newConfig.amaEnabled) {
-      AwsMobileAnalyticsConfig.recordDynamicCustomEvent('DISABLE_AMA')
       this.setState({
         amaMessage: i18n.__('We hope we will gain your trust')
       })

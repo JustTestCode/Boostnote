@@ -3,7 +3,6 @@ import CSSModules from 'browser/lib/CSSModules'
 import styles from './SnippetTab.styl'
 import context from 'browser/lib/context'
 import i18n from 'browser/lib/i18n'
-
 class SnippetTab extends React.Component {
   constructor(props) {
     super(props)
@@ -31,10 +30,39 @@ class SnippetTab extends React.Component {
       {
         label: i18n.__('Rename'),
         click: e => this.handleRenameClick(e)
+      },
+      {
+        label: '执行',
+        click: e => this.handleRunClick(e)
       }
     ])
   }
 
+  handleRunClick(e) {
+    const fs = require('fs')
+    const path = require('path')
+    const osTmpdir = require('os').tmpdir()
+    const { shell } = require('electron')
+    const tmpPath = path.join(osTmpdir, 'Boostnote')
+    fs.mkdir(tmpPath, { recursive: true }, function(err) {
+      return console.error(err)
+    })
+    const filepath = path.join(tmpPath, this.props.snippet.name)
+    fs.writeFile(filepath, this.props.snippet.content, function(err) {
+      if (err) {
+        return new window.Notification('写入文件出错', {
+          body: err,
+          silent: true,
+          icon: path.join(
+            'file://',
+            global.__dirname,
+            '../../resources/app.png'
+          )
+        })
+      }
+      shell.openItem(filepath)
+    })
+  }
   handleRenameClick(e) {
     this.startRenaming()
   }
